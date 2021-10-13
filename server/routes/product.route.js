@@ -4,6 +4,9 @@ const Product = require('../models/Product')
 const auth = require('../middleware/auth')
 const adminAuth = require('../middleware/adminAuth')
 const productById = require('../middleware/productById');
+const { send } = require('process')
+const _ = require('lodash');
+const { result } = require('lodash');
 //const formidable = require('formidable')
 //const fs = require('fs')
 
@@ -48,6 +51,29 @@ router.post("/", [
     }
 })
 
+// @route   Get api/product/:productId
+// @desc    Get a list of products  with filter 
+//  options(order = asc or desc, sortBy any product propert like name, limit, number of returned product)
+// @access  Public
+router.get('/list',async(req, res) => {
+    let order = req.query.order ? req.query.order:'asc';
+    let sortBy = req.query.sortBy ? req.query.sortBy:'id';
+    let limit = req.query.limit ? parseInt(req.query.limit): 6;
+
+    try{
+        let products = await Product.find({})
+            .populate('category').sort([
+                [sortBy, order]
+            ]).limit(limit).exec();
+
+        res.json(products)
+    }catch(error) {
+        console.log(error)
+        res.status(500).send('Invalid querys')
+    }
+})
+
+
 // @route   Get api/product/productId
 // @desc    Get a Product information
 // @access  Public
@@ -55,6 +81,26 @@ router.get("/:productId", productById, (req, res) => {
     req.product.photo = undefined;
     return res.json(req.product)
 })
+
+
+// @route   Delete api/product/
+// @desc    Delete a Product
+// @access  Private Admin
+router.delete("/:productId", productById, async (req, res) => {
+    let product = req.product
+    try {
+        let deletedProduct = await product.remove()
+        res.json({
+            message: `${deletedProduct.name} deleted successfully`
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server error')
+    }
+
+})
+
+
 
 /*
 
