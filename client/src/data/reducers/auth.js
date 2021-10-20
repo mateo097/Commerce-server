@@ -33,7 +33,7 @@ export default function (state = intialState, action) {
         case USER_LOADED:
             return {
                 ...state,
-                payload,
+                user: payload,
                 isAuthenticated: true,
                 loading: false
             }
@@ -119,6 +119,7 @@ export const register = ({
             payload: res.data
         })
 
+        dispatch(loadUser())
         
     } catch (err) {
         const errors = err.response.data.errors
