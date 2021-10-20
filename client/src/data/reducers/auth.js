@@ -11,7 +11,8 @@ import setAuthToken from '../../helpers/setAuthToken';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAIL = 'REGISTER_FAIL';
 const USER_LOADED = 'USER_LOADED'
-const AUTH_ERROR = 'AUTH_ERROR'
+const AUTH_ERROR = 'AUTH_ERROR' 
+const LOGOUT = 'LOGOUT'
 
 // Intial State
 const intialState = {
@@ -46,6 +47,7 @@ export default function (state = intialState, action) {
             };
         case REGISTER_FAIL:
         case AUTH_ERROR:
+        case LOGOUT:
             // Remove Token in localstorage
             localStorage.removeItem('token');
             return {
@@ -117,3 +119,9 @@ export const register = ({
         })
     }
 };
+
+export const logout = () => dispatch => {
+    dispatch({
+        type: LOGOUT
+    })
+} 

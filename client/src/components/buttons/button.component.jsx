@@ -22,6 +22,7 @@ const Button = ({ isButton = true, title = '', action, href, moreStyle, type = "
         <button
           className={style}
           type={type}
+          onClick={action}
         >
           {title}
         </button>
