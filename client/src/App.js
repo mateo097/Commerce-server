@@ -1,10 +1,25 @@
 import './App.css';
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { loadUser } from './data/reducers/auth';
+import store from './data/store';
+import setAuthToken from './helpers/setAuthToken';
+import Routes from './routes';
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
 function App() {
+
+  useEffect(() => {
+    store.dispatch(loadUser()) 
+   }, [])
+
   return (
-    <div className="App">
-     <p>:L</p>
-    </div>
+    <Provider store={store}>
+      <Routes />
+    </Provider>
   );
 }
 
