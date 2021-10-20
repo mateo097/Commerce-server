@@ -11,8 +11,9 @@ import setAuthToken from '../../helpers/setAuthToken';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAIL = 'REGISTER_FAIL';
 const USER_LOADED = 'USER_LOADED'
-const AUTH_ERROR = 'AUTH_ERROR' 
+const AUTH_ERROR = 'AUTH_ERROR'
 const LOGOUT = 'LOGOUT'
+const SET_LOADING = 'SET_LOADING'
 
 // Intial State
 const intialState = {
@@ -45,6 +46,11 @@ export default function (state = intialState, action) {
                 isAuthenticated: true,
                 loading: false,
             };
+        case SET_LOADING:
+            return {
+                ...state,
+                loading: true
+            }
         case REGISTER_FAIL:
         case AUTH_ERROR:
         case LOGOUT:
@@ -100,6 +106,10 @@ export const register = ({
         password
     });
 
+    dispatch({
+        type:SET_LOADING
+    })
+
     try {
         // Response 
         const res = await axios.post(`${URLDevelopment}/api/user/register`, body, config)
@@ -108,6 +118,8 @@ export const register = ({
             type: REGISTER_SUCCESS,
             payload: res.data
         })
+
+        
     } catch (err) {
         const errors = err.response.data.errors
         if (errors) {
@@ -124,4 +136,4 @@ export const logout = () => dispatch => {
     dispatch({
         type: LOGOUT
     })
-} 
+}
